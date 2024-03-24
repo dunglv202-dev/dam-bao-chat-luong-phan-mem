@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = sqa-be
+	url = https://github.com/dunglv202-dev/sqa-be
+[submodule "frontend"]
+	path = sqa-fe
+	url = https://github.com/dunglv202-dev/sqa-fe
