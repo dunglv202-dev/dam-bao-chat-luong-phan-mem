@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+    ports:
+      - "8098:80"
+    restart: always
+  db:
+    image: mysql:8.4.0
+    volumes:
+      - sqa_db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    restart: always
+
+  adminer:
+    image: adminer
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+    restart: always
+
+  backend:
+    image: sqa/backend
+    build:
+      context: ../sqa-be
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=${MYSQL_ROOT_PASSWORD}
+    restart: always
+    depends_on:
+      - db
+
+  frontend:
+    image: sqa/frontend
+    build:
+      context: ../sqa-fe
+    restart: always
+
+volumes:
+  sqa_db_data:
+    name: sqa_db_data
